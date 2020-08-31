@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+
+  php:
+    build:
+      context: ./docker/images/php
+      args:
+        php_version: ${PHP_VERSION}
+        set_up_ssh_server: ${SET_UP_SSH_SERVER}
+    volumes:
+      - ./docker/logs:/var/log
+      - ./src:/var/www
+    ports:
+      - "127.0.0.1:10000:9000"
+      - "2222:22"
+
+#  nginx:
+##    image: nginx:latest
+#    build: ./docker/images/nginx
+#    volumes:
+#      - ./src:/var/www
+#    links:
+#      - php
+#    ports:
+#    - "80:80"
+#    - "443:443"
