@@ -8,19 +8,36 @@ services:
         php_version: ${PHP_VERSION}
         set_up_ssh_server: ${SET_UP_SSH_SERVER}
     volumes:
-      - ./docker/logs:/var/log
-      - ./src:/var/www
+      - ./docker/logs/tmp/php_sessions:/sessions
+      - logs:/var/log
+      - project:/var/www
     ports:
-      - "127.0.0.1:10000:9000"
-      - "2222:22"
+      - "${INTERFACE}:${PHP_FPM_PORT}:9000"
+      - "${INTERFACE}:${XDEBUG_PORT}:9001"
+      - "${INTERFACE}:${SSH_PORT}:22"
+    environment:
+      XDEBUG_CONFIG: "remote_host=${XDEBUG_HOST} remote_enable=${XDEBUG_REMOTE_ENABLE} remote_connect_back=${XDEBUG_CONNECT_BACK}"
 
-#  nginx:
-##    image: nginx:latest
-#    build: ./docker/images/nginx
-#    volumes:
-#      - ./src:/var/www
-#    links:
-#      - php
-#    ports:
-#    - "80:80"
-#    - "443:443"
+  nginx:
+    build: ./docker/images/nginx
+    volumes:
+      - project:/var/www
+    links:
+      - php
+    ports:
+      - "80:80"
+      - "443:443"
+
+volumes:
+  project:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PROJECT_PATH}
+  logs:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${LOGS_PATH}
