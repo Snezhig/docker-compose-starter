@@ -25,6 +25,7 @@ for DIRECTORY in "supervisor" "tmp" "mysql" "nginx" "php" "tmp/php_sessions"; do
   mkdir -p "$LOGS_PATH/$DIRECTORY"
 done
 
+#Create public directory
 if [ ! -d 'public' ]; then
   read -p "Create public folder with index.php? " -i 'Y' -e CREATE_PUBLIC
   if [ "${CREATE_PUBLIC^^}" == 'Y' ]; then
