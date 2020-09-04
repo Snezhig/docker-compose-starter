@@ -20,9 +20,9 @@ sed -ri "s~@PATH_TO_PROJECT@~$PROJECT_PATH~" .env
 read -p "Type the log path: " -i "$CURRENT_DIR/docker/logs" -e LOGS_PATH
 sed -ri "s~@PATH_TO_LOGS@~$LOGS_PATH~" .env
 
-cd docker && mkdir -p "logs"
-cd "logs" && mkdir -p {"supervisor","tmp","mysql","nginx","php"}
-cd "tmp" && mkdir -p "php_sessions" && cd ../../..
+for DIRECTORY in "supervisor" "tmp" "mysql" "nginx" "php" "tmp/php_sessions"; do
+  mkdir -p "$LOGS_PATH/$DIRECTORY"
+done
 
 if [ ! -d 'public' ]; then
   read -p "Create public folder with index.php? " -i 'Y' -e CREATE_PUBLIC
