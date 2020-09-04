@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ENV_FILE=.env
-
+#Check if env file exists and offer to recreate it
 if [ -f "$ENV_FILE" ]; then
   echo "The .env file already exists."
   read -p "Would you like to remove it? (Y|N): " -i 'N' -e REMOVE_ENV_FILE
@@ -13,6 +13,7 @@ else
   cp .env.template .env
 fi
 
+#Ask user to type base paths
 CURRENT_DIR=$PWD
 read -p "Type the project path: " -i "$CURRENT_DIR" -e PROJECT_PATH
 sed -ri "s~@PATH_TO_PROJECT@~$PROJECT_PATH~" .env
