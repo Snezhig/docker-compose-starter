@@ -56,8 +56,6 @@ docker-compose up --build -d
 * Why there is `open-ssh-server` in php container?
     * I work on Windows I couldn't connect IDE with docker-compose, namely to give access to php interpreter to run tests from IDE, so I decided to connect by ssh to do it
 
-
-
 ---
 # Features
 ## .env file
