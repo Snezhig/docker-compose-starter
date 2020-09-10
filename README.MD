@@ -38,9 +38,16 @@ chmod +x init.sh
 ```
 ~/projects/docker-compose-starter$ ./init.sh
 
-# Type the project path: /home/x/projects/docker-compose-starter
-# Type the log path: /home/x/projects/docker-compose-starter/docker/logs
+# Type the project name: docker_compose_starter
+# Type the project path: /x/projects/docker-compose-starter
+# Type the path to docker data: /x/projects/docker-compose-starter/docker/data
+# Type the log path: /x/projects/docker-compose-starter/docker/logs
+# Type database name: docker_db
+# Type database user: docker_user
+# Type database user password: docker_pass
+# Type database root password: docker_root_pass
 # Create public folder with index.php? Y
+
 ```
 
 #### Step 5
@@ -60,17 +67,19 @@ docker-compose up --build -d
 # Features
 ## .env file
 > Most of them understandable by name, but I will describe some
-* `PROJECT_PATH`: path for `project` valume. Will be filled by `init.sh`
-* `LOGS_PATH`: path for `logs` valume. Will be filled by `init.sh`
-* `SET_UP_SSH_SERVER`: If it is true docker installes `ssh server` and runs it and php-frm by supervisord
+* `PROJECT_NAME`: used as a prefix for containers
+* `PROJECT_PATH`: path for `project` volume. Will be filled by `init.sh`
+* `LOGS_PATH`: path for `logs` volume. Will be filled by `init.sh`
+* `DATA_PATH`: path for docker data (E.g database)
+* `SET_UP_SSH_SERVER`: If it is true docker will install `ssh server` and runs it and php-frm by supervisord
 * `XDEBUG_HOST`: `host.docker.internal` works for windows, but maybe
 
 ---
 
 # What's next
-* Complement README
-* Add variable for php extensions
-* Add mysql container
+* [ ] Complement README
+* [ ] Add variable for php extensions
+* [x] Add mysql container
 
 ---
 

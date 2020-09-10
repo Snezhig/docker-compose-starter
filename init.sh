@@ -15,11 +15,30 @@ fi
 
 #Ask user to type base paths
 CURRENT_DIR=$PWD
+read -p "Type the project name: " -i "$(sed s~-~_~g <<< ${PWD##*/})" -e PROJECT_NAME
+sed -ri "s~@YOUR_PROJECT_NAME@~$PROJECT_NAME~" .env
+
 read -p "Type the project path: " -i "$CURRENT_DIR" -e PROJECT_PATH
 sed -ri "s~@PATH_TO_PROJECT@~$PROJECT_PATH~" .env
 
+read -p "Type the path to docker data: " -i "$CURRENT_DIR/docker/data" -e PATH_TO_DOCKER_DATA
+sed -ri "s~@PATH_TO_DOCKER_DATA@~$PATH_TO_DOCKER_DATA~" .env
+
 read -p "Type the log path: " -i "$CURRENT_DIR/docker/logs" -e LOGS_PATH
 sed -ri "s~@PATH_TO_LOGS@~$LOGS_PATH~" .env
+
+read -p "Type database name: " -e DB_NAME
+sed -ri "s~@DB_NAME@~$DB_NAME~" .env
+
+read -p "Type database user: " -e DB_USER
+sed -ri "s~@DB_USER@~$DB_USER~" .env
+
+read -p "Type database user password: " -e DB_PASSWORD
+sed -ri "s~@DB_PASSWORD@~$DB_PASSWORD~" .env
+
+read -p "Type database root password: " -e DB_ROOT_PASSWORD
+sed -ri "s~@DB_ROOT_PASSWORD@~$DB_ROOT_PASSWORD~" .env
+
 
 for DIRECTORY in "supervisor" "tmp" "mysql" "nginx" "php" "tmp/php_sessions"; do
   mkdir -p "$LOGS_PATH/$DIRECTORY"

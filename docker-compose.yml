@@ -2,6 +2,7 @@ version: "3.7"
 services:
 
   php:
+    container_name: ${PROJECT_NAME}_php
     build:
       context: ./docker/images/php
       args:
@@ -15,10 +16,13 @@ services:
       - "${INTERFACE}:${PHP_FPM_PORT}:9000"
       - "${INTERFACE}:${XDEBUG_PORT}:9001"
       - "${INTERFACE}:${SSH_PORT}:22"
+    links:
+      - database
     environment:
       XDEBUG_CONFIG: "remote_host=${XDEBUG_HOST} remote_enable=${XDEBUG_REMOTE_ENABLE} remote_connect_back=${XDEBUG_CONNECT_BACK}"
 
   nginx:
+    container_name: ${PROJECT_NAME}_nginx
     build: ./docker/images/nginx
     volumes:
       - project:/var/www
@@ -27,6 +31,24 @@ services:
     ports:
       - "80:80"
       - "443:443"
+
+  database:
+    container_name: ${PROJECT_NAME}_database
+    build:
+      context: ./docker/images/database
+      args:
+        version: ${DB_VERSION}
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - logs:/var/log
+      - project:/var/www
+      - ${DATA_PATH}/database:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
 
 volumes:
   project:
