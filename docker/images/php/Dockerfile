@@ -1,5 +1,5 @@
-ARG php_version
-FROM php:${php_version}-fpm
+ARG php_version=7.2
+FROM php:${php_version}-fpm as base
 
 MAINTAINER snezhig
 
@@ -8,7 +8,6 @@ WORKDIR /var/www
 RUN apt-get update && apt-get install -y curl wget
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 RUN docker-php-ext-install pdo pdo_mysql mysqli
-RUN pecl install xdebug
 
 RUN usermod -u 1000 www-data
 
@@ -33,6 +32,6 @@ COPY supervisor.conf /etc/supervisor/conf.d/
 
 
 EXPOSE 9000 22
-CMD sh /tmp/php-starter.sh
 
-
+FROM base as php-7
+RUN pecl install xdebug

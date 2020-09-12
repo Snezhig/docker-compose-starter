@@ -3,8 +3,10 @@ services:
 
   php:
     container_name: ${PROJECT_NAME}_php
+    command: ["bash", "/tmp/php-starter.sh"]
     build:
       context: ./docker/images/php
+      target: ${PHP_TARGET}
       args:
         php_version: ${PHP_VERSION}
         set_up_ssh_server: ${SET_UP_SSH_SERVER}
@@ -13,9 +15,9 @@ services:
       - logs:/var/log
       - project:/var/www
     ports:
-      - "${INTERFACE}:${PHP_FPM_PORT}:9000"
-      - "${INTERFACE}:${XDEBUG_PORT}:9001"
-      - "${INTERFACE}:${SSH_PORT}:22"
+      - "${PHP_FPM_PORT}:9000"
+      - "${XDEBUG_PORT}:9001"
+      - "${SSH_PORT}:22"
     links:
       - database
     environment:

@@ -72,7 +72,7 @@ docker-compose up --build -d
 * `LOGS_PATH`: path for `logs` volume. Will be filled by `init.sh`
 * `DATA_PATH`: path for docker data (E.g database)
 * `SET_UP_SSH_SERVER`: If it is true docker will install `ssh server` and runs it and php-frm by supervisord
-* `XDEBUG_HOST`: `host.docker.internal` works for windows, but maybe
+* `XDEBUG_HOST`: `host.docker.internal` works for windows
 
 ---
 
