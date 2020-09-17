@@ -16,12 +16,11 @@ services:
       - project:/var/www
     ports:
       - "${PHP_FPM_PORT}:9000"
-      - "${XDEBUG_PORT}:9001"
       - "${SSH_PORT}:22"
     links:
       - database
     environment:
-      XDEBUG_CONFIG: "remote_host=${XDEBUG_HOST} remote_enable=${XDEBUG_REMOTE_ENABLE} remote_connect_back=${XDEBUG_CONNECT_BACK}"
+      XDEBUG_CONFIG: "remote_host=${XDEBUG_HOST} remote_port=${XDEBUG_PORT} remote_enable=${XDEBUG_REMOTE_ENABLE} remote_connect_back=${XDEBUG_CONNECT_BACK}"
 
   nginx:
     container_name: ${PROJECT_NAME}_nginx
@@ -31,8 +30,8 @@ services:
     links:
       - php
     ports:
-      - "80:80"
-      - "443:443"
+      - "${INTERFACE}:80:80"
+      - "${INTERFACE}:443:443"
 
   database:
     container_name: ${PROJECT_NAME}_database

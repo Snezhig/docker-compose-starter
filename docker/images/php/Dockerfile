@@ -12,7 +12,6 @@ RUN docker-php-ext-install pdo pdo_mysql mysqli
 RUN usermod -u 1000 www-data
 
 COPY php-starter.sh /tmp/
-COPY conf.d/                        $PHP_INI_DIR/conf.d/
 
 
 #region SSH
@@ -30,8 +29,10 @@ RUN if [ "$set_up_ssh_server" = "true" ]; \
 COPY supervisor.conf /etc/supervisor/conf.d/
 #endregion
 
-
+RUN rm -rf /var/lib/apt/lists/*
 EXPOSE 9000 22
 
 FROM base as php-7
 RUN pecl install xdebug
+COPY conf.d/                        $PHP_INI_DIR/conf.d/
+CMD sh /tpm/php-starter.sh
