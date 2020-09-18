@@ -8,8 +8,8 @@ services:
       context: ./docker/images/php
       target: ${PHP_TARGET}
       args:
-        php_version: ${PHP_VERSION}
-        set_up_ssh_server: ${SET_UP_SSH_SERVER}
+        PHP_VERSION: ${PHP_VERSION}
+        SET_UP_SSH_SERVER: ${SET_UP_SSH_SERVER}
     volumes:
       - ./docker/logs/tmp/php_sessions:/sessions
       - logs:/var/log

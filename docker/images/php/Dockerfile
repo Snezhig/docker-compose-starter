@@ -1,5 +1,5 @@
-ARG php_version=7.2
-FROM php:${php_version}-fpm as base
+ARG PHP_VERSION=7.2
+FROM php:${PHP_VERSION}-fpm as base
 
 MAINTAINER snezhig
 
@@ -15,11 +15,11 @@ COPY php-starter.sh /tmp/
 
 
 #region SSH
-ARG set_up_ssh_server=false
-ENV SET_UP_SSH_SERVER $set_up_ssh_server
+ARG SET_UP_SSH_SERVER=false
+ENV SET_UP_SSH_SERVER $SET_UP_SSH_SERVER
 
 
-RUN if [ "$set_up_ssh_server" = "true" ]; \
+RUN if [ "$SET_UP_SSH_SERVER" = "true" ]; \
     then apt update && apt install -y openssh-server supervisor \
     && mkdir /var/run/sshd \
     && sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config \
@@ -35,4 +35,3 @@ EXPOSE 9000 22
 FROM base as php-7
 RUN pecl install xdebug
 COPY conf.d/                        $PHP_INI_DIR/conf.d/
-CMD sh /tpm/php-starter.sh
