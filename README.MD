@@ -67,7 +67,7 @@ docker-compose up --build -d
 # Features
 ## .env file
 > Most of them understandable by name, but I will describe some
-* `PROJECT_NAME`: used as a prefix for containers
+* `COMPOSE_PROJECT_NAME`: used as a prefix for containers
 * `PROJECT_PATH`: path for `project` volume. Will be filled by `init.sh`
 * `LOGS_PATH`: path for `logs` volume. Will be filled by `init.sh`
 * `DATA_PATH`: path for docker data (E.g database)

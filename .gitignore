@@ -1,5 +1,5 @@
 .idea
 .env
 public
-docker/logs
-docker/data
+logs
+data

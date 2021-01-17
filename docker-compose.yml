@@ -2,31 +2,39 @@ version: "3.7"
 services:
 
   php:
-    container_name: ${PROJECT_NAME}_php
-    command: ["bash", "/tmp/php-starter.sh"]
+    container_name: ${COMPOSE_PROJECT_NAME}_php
+    command: [ "bash", "/tmp/php-starter.sh" ]
     build:
-      context: ./docker/images/php
+      context: images/php
       target: ${PHP_TARGET}
       args:
         PHP_VERSION: ${PHP_VERSION}
         SET_UP_SSH_SERVER: ${SET_UP_SSH_SERVER}
+        COMPOSER_VERSION: ${COMPOSER_VERSION}
     volumes:
-      - ./docker/logs/tmp/php_sessions:/sessions
+      - ~/.ssh:/var/www/.ssh
+      - ./tmp/php_sessions:/sessions
       - logs:/var/log
       - project:/var/www
     ports:
-      - "${PHP_FPM_PORT}:9000"
-      - "${SSH_PORT}:22"
+      - "${INTERFACE}:${PHP_FPM_PORT}:9000"
+      - "${INTERFACE}:${SSH_PORT}:22"
     links:
       - database
     environment:
-      XDEBUG_CONFIG: "remote_host=${XDEBUG_HOST} remote_port=${XDEBUG_PORT} remote_enable=${XDEBUG_REMOTE_ENABLE} remote_connect_back=${XDEBUG_CONNECT_BACK}"
+      XDEBUG_CONFIG: "remote_host=${XDEBUG_HOST} remote_port=${XDEBUG_PORT} remote_enable=${XDEBUG_REMOTE_ENABLE} default_enable=${XDEBUG_REMOTE_ENABLE} remote_autostart=${XDEBUG_REMOTE_ENABLE} remote_connect_back=${XDEBUG_CONNECT_BACK}"
 
   nginx:
-    container_name: ${PROJECT_NAME}_nginx
-    build: ./docker/images/nginx
+    container_name: ${COMPOSE_PROJECT_NAME}_nginx
+    build:
+      context: images/nginx
+      args:
+        DOMAIN: ${DOMAIN}
+        REGEXP: ${NGINX_ROOT_REGEXP}
+        CONDITION_NUMBER: ${NGINX_ROOT_CONDITION_NUMBER}
     volumes:
       - project:/var/www
+      - logs:/var/log
     links:
       - php
     ports:
@@ -34,13 +42,15 @@ services:
       - "${INTERFACE}:443:443"
 
   database:
-    container_name: ${PROJECT_NAME}_database
+    container_name: ${COMPOSE_PROJECT_NAME}_database
     build:
-      context: ./docker/images/database
+      context: images/database
       args:
-        version: ${DB_VERSION}
+        DB_VERSION: ${DB_VERSION}
+        DB_TYPE: ${DB_TYPE}
+        INNODB_FLUSH_METHOD: ${DB_INNODB_FLUSH_METHOD}
     ports:
-      - "${DB_PORT}:3306"
+      - "${INTERFACE}:${DB_PORT}:3306"
     volumes:
       - logs:/var/log
       - project:/var/www
@@ -49,7 +59,17 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD_BITRIX}
+
+  node:
+    image: node:${NODE_VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME}_node
+    command: [ "bash", '-c', "${NODE_COMMAND}" ]
+    volumes:
+      - project:/var/www
+    ports:
+      - "${INTERFACE}:${NODE_PORT}:3001"
+    working_dir: /var/www/frontend
 
 volumes:
   project:
